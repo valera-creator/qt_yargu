@@ -83,8 +83,9 @@ class Window(QMainWindow):
         first_num = self.numLineEdit1.text()
         second_num = self.numLineEdit2.text()
         if self.check_correct(first_num, second_num):
-            res = int(first_num) + int(second_num)
-            if int(second_num) < 0:
+            first_num, second_num = int(first_num), int(second_num)
+            res = first_num + second_num
+            if second_num < 0:
                 self.text_label.setText(f"Результат: {first_num} + ({second_num}) = {res}")
             else:
                 self.text_label.setText(f"Результат: {first_num} + {second_num} = {res}")
@@ -93,8 +94,9 @@ class Window(QMainWindow):
         first_num = self.numLineEdit1.text()
         second_num = self.numLineEdit2.text()
         if self.check_correct(first_num, second_num):
-            res = int(first_num) - int(second_num)
-            if int(second_num) < 0:
+            first_num, second_num = int(first_num), int(second_num)
+            res = first_num - second_num
+            if second_num < 0:
                 self.text_label.setText(f"Результат: {first_num} - ({second_num}) = {res}")
             else:
                 self.text_label.setText(f"Результат: {first_num} - {second_num} = {res}")
@@ -103,8 +105,9 @@ class Window(QMainWindow):
         first_num = self.numLineEdit1.text()
         second_num = self.numLineEdit2.text()
         if self.check_correct(first_num, second_num):
-            res = int(first_num) * int(second_num)
-            if int(second_num) < 0:
+            first_num, second_num = int(first_num), int(second_num)
+            res = first_num * second_num
+            if second_num < 0:
                 self.text_label.setText(f"Результат: {first_num} * ({second_num}) = {res}")
             else:
                 self.text_label.setText(f"Результат: {first_num} * {second_num} = {res}")
@@ -113,12 +116,12 @@ class Window(QMainWindow):
         first_num = self.numLineEdit1.text()
         second_num = self.numLineEdit2.text()
         if self.check_correct(first_num, second_num):
-            second_num = int(second_num)
+            first_num, second_num = int(first_num), int(second_num)
             if second_num == 0:
                 self.text_label.setText("Ошибка: деление на 0")
                 return
             else:
-                res = round(int(first_num) / int(second_num), 3)
+                res = round(first_num / second_num, 3)
                 if second_num < 0:
                     self.text_label.setText(f"Результат: {first_num} / ({second_num}) = {res}")
                 else:
@@ -128,7 +131,8 @@ class Window(QMainWindow):
         first_num = self.numLineEdit1.text()
         second_num = self.numLineEdit2.text()
         if self.check_correct(first_num, second_num):
-            res = round(int(first_num) ** int(second_num), 3)
+            first_num, second_num = int(first_num), int(second_num)
+            res = round(first_num ** second_num, 3)
             self.text_label.setText(f"Результат: {first_num}<sup>{second_num}</sup> = {res}")
 
 
