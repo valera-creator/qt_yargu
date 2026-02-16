@@ -9,103 +9,54 @@ class Window(QWidget):
         self.setWindowTitle("Продукты")
         self.setMinimumSize(300, 300)
         self.min_size_box = 120
-
+        self.max_products = 100
         self.vertical_layout = QVBoxLayout()
 
-        self.create_milk()
-        self.create_bread()
-        self.create_cheese()
+        self.products = []  # список картежей вида (цена, checkbox с галочкой, spinbox с количеством)
+        self.create_product("Молоко", 100)
+        self.create_product("Хлеб", 50)
+        self.create_product("Сыр", 75)
+        self.create_product("Шампанское", 550)
 
         self.label_cost = QLabel("Текущая стоимость покупки: 0")
         self.vertical_layout.addWidget(self.label_cost)
 
         self.setLayout(self.vertical_layout)
 
-    def create_milk(self):
-        self.milk_horizontal_layout = QHBoxLayout()
-        self.milk_cost = 100
-        self.milk_checkbox = QCheckBox(f"Молоко ({self.milk_cost}/шт)")
-        self.milk_checkbox.setMinimumSize(self.min_size_box, self.min_size_box)
-        self.milk_spinbox = QSpinBox()
-        self.milk_spinbox.setRange(0, 100)
+    def create_product(self, name, cost):
+        horizontal_layout = QHBoxLayout()
 
-        self.milk_checkbox.clicked.connect(self.clicked_milk)
+        checkbox = QCheckBox(f"{name} ({cost}/шт)")
+        checkbox.setMinimumSize(self.min_size_box, self.min_size_box)
 
-        # размещение
-        self.milk_horizontal_layout.addWidget(self.milk_checkbox)
-        self.milk_horizontal_layout.addWidget(self.milk_spinbox)
-        self.vertical_layout.addLayout(self.milk_horizontal_layout)
+        spinbox = QSpinBox()
+        spinbox.setRange(0, self.max_products)
 
-        # пересчёт цены после изменения хотя бы одной штуки
-        self.milk_checkbox.stateChanged.connect(self.calculate_total)
-        self.milk_spinbox.valueChanged.connect(self.calculate_total)
-
-    def create_bread(self):
-        self.bread_layout = QHBoxLayout()
-        self.bread_cost = 50
-        self.bread_checkbox = QCheckBox(f"Хлеб ({self.bread_cost}/шт)")
-        self.bread_checkbox.setMinimumSize(self.min_size_box, self.min_size_box)
-        self.bread_spinbox = QSpinBox()
-        self.bread_spinbox.setRange(0, 100)
-
-        self.bread_checkbox.clicked.connect(self.clicked_bread)
+        checkbox.clicked.connect(self.clicked_chebox)
 
         # размещение
-        self.bread_layout.addWidget(self.bread_checkbox)
-        self.bread_layout.addWidget(self.bread_spinbox)
-        self.vertical_layout.addLayout(self.bread_layout)
+        horizontal_layout.addWidget(checkbox)
+        horizontal_layout.addWidget(spinbox)
+        self.vertical_layout.addLayout(horizontal_layout)
 
         # пересчёт цены после изменения хотя бы одной штуки
-        self.bread_checkbox.stateChanged.connect(self.calculate_total)
-        self.bread_spinbox.valueChanged.connect(self.calculate_total)
+        checkbox.stateChanged.connect(self.calculate_total)
+        spinbox.valueChanged.connect(self.calculate_total)
 
-    def create_cheese(self):
-        self.cheese_layout = QHBoxLayout()
-        self.cheese_cost = 75
-        self.cheese_checkbox = QCheckBox(f"Сыр ({self.cheese_cost}/шт)")
-        self.cheese_checkbox.setMinimumSize(self.min_size_box, self.min_size_box)
-        self.cheese_spinbox = QSpinBox()
-        self.cheese_spinbox.setRange(0, 100)
+        self.products.append((cost, checkbox, spinbox))
 
-        self.cheese_checkbox.clicked.connect(self.clicked_cheese)
-
-        # размещение
-        self.cheese_layout.addWidget(self.cheese_checkbox)
-        self.cheese_layout.addWidget(self.cheese_spinbox)
-        self.vertical_layout.addLayout(self.cheese_layout)
-
-        # пересчёт цены после изменения хотя бы одной штуки
-        self.cheese_checkbox.stateChanged.connect(self.calculate_total)
-        self.cheese_spinbox.valueChanged.connect(self.calculate_total)
-
-    def clicked_milk(self):
-        value = self.milk_checkbox.checkState().value == 2  # значение 2 если выбран, 0 если не выбран
-        font = self.milk_checkbox.font()
+    def clicked_chebox(self):
+        cur_product = self.sender()  # текущий элемент checkbox, с которого было нажато
+        value = cur_product.checkState().value == 2  # значение 2 если выбран, 0 если не выбран
+        font = cur_product.font()
         font.setBold(value)  # в зависимости от выбранного значение переменная bool True или False
-        self.milk_checkbox.setFont(font)
-
-    def clicked_bread(self):
-        value = self.bread_checkbox.checkState().value == 2  # значение 2 если выбран, 0 если не выбран
-        font = self.bread_checkbox.font()
-        font.setBold(value)  # в зависимости от выбранного значение переменная bool True или False
-        self.bread_checkbox.setFont(font)
-
-    def clicked_cheese(self):
-        value = self.cheese_checkbox.checkState().value == 2  # значение 2 если выбран, 0 если не выбран
-        font = self.cheese_checkbox.font()
-        font.setBold(value)  # в зависимости от выбранного значение переменная bool True или False
-        self.cheese_checkbox.setFont(font)
+        cur_product.setFont(font)
 
     def calculate_total(self):
-        all_cost_milk = self.milk_cost * int(self.milk_checkbox.checkState().value == 2) * int(
-            self.milk_spinbox.value())
-        all_cost_bread = self.bread_cost * int(self.bread_checkbox.checkState().value == 2) * int(
-            self.bread_spinbox.value())
-        all_cost_cheese = self.cheese_cost * int(self.cheese_checkbox.checkState().value == 2) * int(
-            self.cheese_spinbox.value())
-
-        cur_cost = all_cost_milk + all_cost_bread + all_cost_cheese
-
+        cur_cost = 0
+        for elem in self.products:
+            cost, checkbox, spinbox = elem[0], elem[1], elem[2]
+            cur_cost += cost * int(checkbox.checkState().value == 2) * int(spinbox.value())
         self.label_cost.setText(f"Текущая стоимость покупки: {cur_cost}")
 
 
