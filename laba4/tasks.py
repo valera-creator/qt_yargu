@@ -1,6 +1,13 @@
+import re
 from PySide6.QtCore import Qt, Slot
 from PySide6.QtWidgets import QMainWindow, QTabWidget, QApplication, QLabel, QGridLayout, QWidget, QFormLayout, \
     QLineEdit, QCheckBox, QPushButton
+from PySide6.QtGui import QDrag
+
+
+def validate_email(email):
+    pattern = r"^[A-Za-z0-9._%+-]+@[A-Za-z0-9-]+\.[A-Za-z]{2,4}$"
+    return re.match(pattern, email)
 
 
 class Window(QMainWindow):
@@ -21,6 +28,11 @@ class Window(QMainWindow):
         self.layout_form = QFormLayout()
         self.make_form_account()
         self.tab.addTab(self.form_account_widget, "Форма")
+
+        # вкладка с виджетом по клику
+        self.widget_click_mouse = QWidget()
+        self.make_widget_click_mouse()
+        self.tab.addTab(self.widget_click_mouse, "Виджет по клику мыши")
 
         self.setCentralWidget(self.tab)
 
@@ -81,15 +93,21 @@ class Window(QMainWindow):
         text_error = ""
         if not self.surname.text().strip():
             text_error += "Отсутствует фамилия"
-        elif not self.surname.text().isalpha():
+        elif not self.surname.text().strip().isalpha():
             text_error += "Неправильный ввод данных:\nНекорректная фамилия"
         if not self.name.text().strip():
             text_error += "\nОтсутствует имя"
-        elif not self.name.text().isalpha():
+        elif not self.name.text().strip().isalpha():
             text_error += "\nНекорректное имя"
-        phone = self.phone.text().strip()
         if not self.patronymic.text().strip():
-            text_error += "\nОтсутствует отчество"
+            text_error += "\nОтсутствует информация про отчество"
+        elif not self.patronymic.text().strip().isalpha():
+            text_error += "\nНекорректное отчество"
+        if not self.email.text().strip():
+            text_error += "\nОтсутствует почта"
+        elif not validate_email(self.email.text()):
+            text_error += "\nНекорректная почта"
+        phone = self.phone.text().strip()
         if not phone:
             text_error += "\nОтсутствует телефон"
         elif len(phone) != 12 or phone[0] != "+" or not phone[1:].isdigit():
@@ -114,7 +132,10 @@ class Window(QMainWindow):
 
         self.patronymic = QLineEdit()
         self.patronymic.setPlaceholderText('При наличии, иначе укажите "нет"')
-        self.layout_form.addRow("Отчество", self.patronymic)
+        self.layout_form.addRow("Отчество:", self.patronymic)
+
+        self.email = QLineEdit()
+        self.layout_form.addRow("Почта:", self.email)
 
         self.phone = QLineEdit()
         self.phone.setPlaceholderText("Формат содержит + и только цифры (11 цифр)")  # подсказка пользователю
@@ -140,6 +161,9 @@ class Window(QMainWindow):
 
         self.result_form = QLabel()
         self.layout_form.addRow(self.result_form)
+
+    def make_widget_click_mouse(self):
+        pass
 
 
 if __name__ == '__main__':
