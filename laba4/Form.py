@@ -1,5 +1,6 @@
 import re
-from PySide6.QtCore import Slot
+from PySide6.QtCore import Slot, QRegularExpression
+from PySide6.QtGui import QRegularExpressionValidator
 from PySide6.QtWidgets import QLabel, QWidget, QFormLayout, QLineEdit, QCheckBox, QPushButton
 
 
@@ -20,16 +21,10 @@ class Form(QWidget):
         text_error = ""
         if not self.surname.text().strip():
             text_error += "Отсутствует фамилия"
-        elif not self.surname.text().strip().isalpha():
-            text_error += "Неправильный ввод данных:\nНекорректная фамилия"
         if not self.name.text().strip():
             text_error += "\nОтсутствует имя"
-        elif not self.name.text().strip().isalpha():
-            text_error += "\nНекорректное имя"
         if not self.patronymic.text().strip():
             text_error += "\nОтсутствует информация про отчество"
-        elif not self.patronymic.text().strip().isalpha():
-            text_error += "\nНекорректное отчество"
         if not self.email.text().strip():
             text_error += "\nОтсутствует почта"
         elif not self.validate_email():
@@ -37,8 +32,10 @@ class Form(QWidget):
         phone = self.phone.text().strip()
         if not phone:
             text_error += "\nОтсутствует телефон"
-        elif len(phone) != 12 or phone[0] != "+" or not phone[1:].isdigit():
-            text_error += "\nНекорректный телефон"
+        else:
+            pattern_phone = r"^(?:\+7|8)\d{10}$"
+            if not re.match(pattern_phone, phone):
+                text_error += "\nНекорректный телефон (введён не до конца)"
         if self.personal_data.checkState().value == 0:
             text_error += "\nВы должны быть согласны с обраткой персональных данных"
 
@@ -49,21 +46,34 @@ class Form(QWidget):
             self.result_form.setText(text_error)
 
     def make_form_account(self):
+        surname_regex = QRegularExpression(r"^[A-ZА-ЯЁ][A-Za-zА-Яа-яЁё\s\-]*$")
         self.surname = QLineEdit()
+        self.surname.setPlaceholderText("Фамилия (с заглавной буквы)")
+        self.surname.setValidator(QRegularExpressionValidator(surname_regex))
         self.layout_form.addRow("Фамилия:", self.surname)
 
+        name_regex = QRegularExpression(r"^[A-ZА-ЯЁ][A-Za-zА-Яа-яЁё\s\-]*$")
         self.name = QLineEdit()
+        self.name.setPlaceholderText("Имя (с заглавной буквы)")
+        self.name.setValidator(QRegularExpressionValidator(name_regex))
         self.layout_form.addRow("Имя:", self.name)
 
+        patronymic_regex = QRegularExpression(r"^(?:[A-ZА-ЯЁ][A-Za-zА-Яа-яЁё\s\-]*|Нет)$")
         self.patronymic = QLineEdit()
-        self.patronymic.setPlaceholderText('При наличии, иначе укажите "нет"')
+        self.patronymic.setPlaceholderText('Отчество (с заглавной буквы) При наличии, иначе укажите "Нет"')
+        self.patronymic.setValidator(QRegularExpressionValidator(patronymic_regex))
         self.layout_form.addRow("Отчество:", self.patronymic)
 
+        email_regex = QRegularExpression(r"^[A-Za-z0-9._%+-]+@[A-Za-z0-9-]+\.[A-Za-z]{2,4}$")
         self.email = QLineEdit()
+        self.email.setPlaceholderText("Почта")
+        self.email.setValidator(QRegularExpressionValidator(email_regex))
         self.layout_form.addRow("Почта:", self.email)
 
+        phone_regex = QRegularExpression(r"^(?:\+7|8)\d{10}$")
         self.phone = QLineEdit()
-        self.phone.setPlaceholderText("Формат содержит + и только цифры (11 цифр)")  # подсказка пользователю
+        self.phone.setPlaceholderText("+79991234567 или 89991234567")
+        self.phone.setValidator(QRegularExpressionValidator(phone_regex))
         self.layout_form.addRow("Телефон:\n", self.phone)
 
         self.layout_form.addRow(QLabel("Интересные темы: "))
