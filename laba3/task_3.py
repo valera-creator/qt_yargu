@@ -34,8 +34,13 @@ class Window(QWidget):
         cur_datetime = datetime.datetime.today()
         user_datetime = self.dateTimeEdit.dateTime().toPython()  # конверт в формат datetime
 
+        years = cur_datetime.year - user_datetime.year
+        # если дня рождения еще не было
+        if (cur_datetime.month, cur_datetime.day) < (user_datetime.month, user_datetime.day):
+            years -= 1
+
         diff = cur_datetime - user_datetime
-        text = (f"Сейчас лет: {diff.days // 365}\nСейчас часов: {int(diff.total_seconds() // 3600)}\n"
+        text = (f"Сейчас лет: {years}\nСейчас часов: {int(diff.total_seconds() // 3600)}\n"
                 f"Сейчас секунд: {int(diff.total_seconds())}")
         self.textEdit.setText(text)
 
