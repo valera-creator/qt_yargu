@@ -40,9 +40,9 @@ class Window(QWidget):
             years -= 1
 
         diff = cur_datetime - user_datetime
-        text = (f"Сейчас лет: {years}\nСейчас часов: {int(diff.total_seconds() // 3600)}\n"
-                f"Сейчас секунд: {int(diff.total_seconds())}")
-        self.textEdit.setText(text)
+        text = (f"Сейчас лет: **{years}**, сейчас часов: **{int(diff.total_seconds() // 3600)}**, "
+                f"сейчас секунд: **{int(diff.total_seconds())}**")
+        self.textEdit.setMarkdown(text)
 
 
 if __name__ == '__main__':
