@@ -1,4 +1,5 @@
 from PySide6.QtCore import QAbstractListModel, Qt, QModelIndex
+import datetime
 
 
 class MyModel(QAbstractListModel):
@@ -17,8 +18,8 @@ class MyModel(QAbstractListModel):
     def setData(self, index, value, role=Qt.EditRole):
         "редактирует элемент в модели"
         if role == Qt.EditRole:
-            text, time = value[0], value[1].strftime('%d.%m.%Y %H:%M:%S')
-            self.__data_model[index.row()] = (text, time)
+            time = datetime.datetime.now().strftime('%d.%m.%Y %H:%M:%S')
+            self.__data_model[index.row()] = (value, time)
             return True
         return False
 
@@ -38,9 +39,10 @@ class MyModel(QAbstractListModel):
         text = text.replace("ㅤ", "")
         return True if text else False
 
-    def append_data(self, text, date):
+    def append_data(self, text):
         if self.check_text(text):
-            self.__data_model.append((text, date.strftime('%d.%m.%Y %H:%M:%S')))
+            time = datetime.datetime.now().strftime('%d.%m.%Y %H:%M:%S')
+            self.__data_model.append((text, time))
             self.insertRow(len(self.__data_model) - 1)
             return True
         return False

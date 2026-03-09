@@ -39,4 +39,4 @@ class CustomDialog(QDialog):
 
     def get_text(self):
         """Возвращает состояние чекбокса"""
-        return self.line_edit.text()
+        return self.line_edit.text().strip()
