@@ -28,8 +28,16 @@ class Mouse(QWidget):
         event.accept()
 
     def dragMoveEvent(self, event):
-        """многоразовая проверка при смещении курсора, что разрешено захватить виджет"""
-        event.accept()
+        """Проверка при движении курсора с перетаскиваемым объектом"""
+        if event.position().y() >= self.height() / 2:
+            widget = event.source()
+            if (event.position().y() + widget.height() <= self.height() and 0 <= event.position().x() and
+                    event.position().x() + widget.width() <= self.width()):
+                event.accept()
+            else:
+                event.ignore()
+        else:
+            event.ignore()
 
     def mousePressEvent(self, event):
         if event.position().y() < self.height() / 2:  # если клик в верхней половине
@@ -39,9 +47,10 @@ class Mouse(QWidget):
         pos = event.position()
         widget = event.source()
 
-        # целиком за экран кнопку не убрать, поскольку на 2 делю widget.height() и widget.width()
-        if (event.position().y() < self.height() / 2 or event.position().y() > self.height() - widget.height() / 2 or
-                event.position().x() < 0 or event.position().x() > self.width() - widget.width() / 2):
+        # целиком за экран кнопку не убрать + в нижней половине экрана
+        if (event.position().y() < self.height() / 2 and not (
+                event.position().y() + widget.height() <= self.height() and 0 <= event.position().x() and
+                event.position().x() + widget.width() <= self.width())):
             event.ignore()
         else:
             widget.move(pos.x(), pos.y())
