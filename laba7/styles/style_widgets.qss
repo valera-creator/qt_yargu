@@ -1,0 +1,53 @@
+QComboBox {
+    border: 1px solid gray;
+    border-radius: 3px;
+    padding: 1px 18px 1px 3px;
+    min-width: 6em;
+}
+/* QComboBox находится в состоянии "on", когда открыт выпадающий список */
+QComboBox:!editable:on, QComboBox::drop-down:editable:on {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #D3D3D3, stop: 0.4 #D8D8D8,
+                                stop: 0.5 #DDDDDD, stop: 1.0 #E1E1E1);
+}
+QComboBox:on { /* смещение текста, когда открыт выпадающий список */
+    padding-top: 3px;
+    padding-left: 4px;
+}
+
+QLineEdit {
+    border: 2px solid gray;
+    border-radius: 10px;
+    padding: 0 8px;
+    background: yellow;
+    selection-background-color: darkgray;
+}
+
+QProgressBar {
+    border: 2px solid grey;
+    border-radius: 5px;
+    text-align: center;
+}
+QProgressBar::chunk {
+    background-color: #CD96CD;
+    width: 10px;
+    margin: 0.5px;
+}
+
+QSlider::groove:horizontal {
+    border: 1px solid #999999;
+    height: 8px; /* Линейка расширяется до размера слайдера по умолчанию. Если задать ей высоту, она будет иметь фиксированный размер */
+    margin: 2px 0;
+}
+QSlider::handle:horizontal {
+    border: 1px solid #5c5c5c;
+    width: 18px;
+    margin: -2px 0; /* Ползунок по умолчанию размещается на прямоугольнике линейки. Отрицательное значение расширяет за пределы */
+    border-radius: 3px;
+}
+QSlider::add-page:horizontal {
+    background: white;
+}
+QSlider::sub-page:horizontal {
+    background: pink;
+}
