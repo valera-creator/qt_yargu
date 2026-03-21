@@ -1,3 +1,4 @@
+from PySide6.QtCore import Slot
 from PySide6.QtWidgets import QMainWindow, QApplication, QPushButton, QDialog, QDialogButtonBox, QVBoxLayout, QLabel, \
     QCheckBox, QWidget
 
@@ -47,6 +48,7 @@ class Window(QMainWindow):
         self.setCentralWidget(self.widget)
         self.setLayout(self.v_layout)
 
+    @Slot()
     def button_clicked(self):
         dlg = CustomDialog()
         if dlg.exec():

@@ -1,0 +1,33 @@
+QWidget#main {
+    background-color: #2f3038;
+    font-size: 15px;
+    min-width: 850px;
+    min-height: 700px;
+}
+
+QPushButton {
+    background-color: #8f0e8b;
+    border-radius: 3px;
+    color: white;
+    min-height: 23px;
+    font-weight: bold;
+}
+
+QPushButton:hover:!pressed {
+    background-color: lime;
+    font-size: 17px;
+ }
+
+QPushButton:hover:pressed {
+    background-color: cyan;
+    color: violet;
+    font-size: 17px;
+ }
+
+QWidget#widget_srcoll {
+    background-color: orange;
+}
+
+QLabel {
+    qproperty-alignment: AlignCenter;
+}

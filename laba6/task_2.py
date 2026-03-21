@@ -1,7 +1,6 @@
-from PySide6.QtWidgets import (QMainWindow, QApplication, QPushButton, QVBoxLayout, QLabel, QWidget, QListView,
-                               QMenuBar, QMenu)
+from PySide6.QtWidgets import (QMainWindow, QApplication, QVBoxLayout, QWidget, QListView, QMenu)
 from PySide6.QtGui import QAction
-from PySide6.QtCore import Slot, Qt, QModelIndex
+from PySide6.QtCore import Slot, QModelIndex
 from task_2_dialog import CustomDialog
 from task_2_model import MyModel
 
@@ -44,6 +43,7 @@ class Window(QMainWindow):
         self.action_edit.setEnabled(False)  # по умолчанию неактивен
         self.action_edit.setVisible(False)  # по умолчанию невидимый
 
+    @Slot()
     def update_edit_menu_state(self):
         # Обновляет доступность пункта "Редактировать" в верхнем меню, если есть выделенный элемент
         has_selection = self.view.currentIndex().isValid()

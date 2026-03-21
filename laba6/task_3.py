@@ -1,4 +1,4 @@
-from PySide6.QtCore import Qt
+from PySide6.QtCore import Qt, Slot
 from PySide6.QtWidgets import QApplication, QMainWindow, QWizard, QLabel, QVBoxLayout, QPushButton, QWidget
 
 from task_3_page_login_password import LoginPasswordPage
@@ -35,6 +35,7 @@ class Window(QMainWindow):
 
         self.setCentralWidget(self.central_widget)
 
+    @Slot()
     def start_wizard(self):
         wizard = Wizard()
         if wizard.exec():
