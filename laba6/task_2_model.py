@@ -1,5 +1,4 @@
 from PySide6.QtCore import QAbstractListModel, Qt, QModelIndex
-import datetime
 
 
 class MyModel(QAbstractListModel):
@@ -12,14 +11,16 @@ class MyModel(QAbstractListModel):
         if role == Qt.DisplayRole:
             elem = self.__data_model[index.row()]
             text, date = elem
-            return f"Текст заметки: {text}\nВремя последнего изменения: {date}"
+
+            day = f"{date.day()}".rjust(2, "0")
+            month = f"{date.month()}".rjust(2, "0")
+            return f"Текст заметки: {text}\nДата: {day}.{month}.{date.year()}"
         return None
 
     def setData(self, index, value, role=Qt.EditRole):
-        "редактирует элемент в модели"
+        """редактирует элемент в модели"""
         if role == Qt.EditRole:
-            time = datetime.datetime.now().strftime('%d.%m.%Y %H:%M:%S')
-            self.__data_model[index.row()] = (value, time)
+            self.__data_model[index.row()] = value
             return True
         return False
 
@@ -39,10 +40,9 @@ class MyModel(QAbstractListModel):
         text = text.replace("ㅤ", "")
         return True if text else False
 
-    def append_data(self, text):
+    def append_data(self, text, date):
         if self.check_text(text):
-            time = datetime.datetime.now().strftime('%d.%m.%Y %H:%M:%S')
-            self.__data_model.append((text, time))
+            self.__data_model.append((text, date))
             self.insertRow(len(self.__data_model) - 1)
             return True
         return False
@@ -57,3 +57,6 @@ class MyModel(QAbstractListModel):
 
     def get_text_by_index(self, row):
         return self.__data_model[row][0]
+
+    def get_date_by_index(self, row):
+        return self.__data_model[row][1]

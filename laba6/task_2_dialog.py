@@ -1,8 +1,9 @@
-from PySide6.QtWidgets import QDialog, QDialogButtonBox, QVBoxLayout, QLabel, QLineEdit
+from PySide6.QtCore import QDate, QDateTime
+from PySide6.QtWidgets import QDialog, QDialogButtonBox, QVBoxLayout, QLabel, QLineEdit, QDateTimeEdit
 
 
 class CustomDialog(QDialog):
-    def __init__(self, title="Взаимодействие с заметкой", note=None):
+    def __init__(self, title="Взаимодействие с заметкой", text=None, date=QDate.currentDate()):
         super().__init__()
 
         self.setWindowTitle(title)
@@ -12,15 +13,22 @@ class CustomDialog(QDialog):
         self.buttonBox.rejected.connect(self.reject)
 
         self.line_edit = QLineEdit()
-        if note is None:
+        if text is None:
             self.line_edit.setPlaceholderText("Введите текст заметки")
         else:
-            self.line_edit.setText(note)
+            self.line_edit.setText(text)
+
+        self.dateTimeEdit = QDateTimeEdit(date, self)
+        self.dateTimeEdit.setMinimumDate(QDate.currentDate().addDays(-365 * 120))
+        self.dateTimeEdit.setMaximumDateTime(QDateTime.currentDateTime().addDays(365 * 120))
+        self.dateTimeEdit.setDisplayFormat("dd.MM.yyyy")
+        self.dateTimeEdit.setCalendarPopup(True)
 
         self.label_err = QLabel()
 
         self.layout = QVBoxLayout()
         self.layout.addWidget(self.line_edit)
+        self.layout.addWidget(self.dateTimeEdit)
         self.layout.addWidget(self.buttonBox)
         self.layout.addWidget(self.label_err)
 
@@ -38,5 +46,9 @@ class CustomDialog(QDialog):
             self.accept()
 
     def get_text(self):
-        """Возвращает состояние чекбокса"""
+        """Возвращает текст"""
         return self.line_edit.text().strip()
+
+    def get_date(self):
+        """возвращает дату"""
+        return self.dateTimeEdit.date()

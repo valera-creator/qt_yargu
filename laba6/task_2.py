@@ -73,15 +73,18 @@ class Window(QMainWindow):
         dlg = CustomDialog("Создание")
         if dlg.exec():
             text = dlg.get_text()
-            self.model.append_data(text)
+            date = dlg.get_date()
+            self.model.append_data(text, date)
 
     @Slot()
     def edit_note(self, index):
         text = self.model.get_text_by_index(index.row())
-        dlg = CustomDialog("Редактирование", text)
+        date = self.model.get_date_by_index(index.row())
+        dlg = CustomDialog("Редактирование", text, date)
         if dlg.exec():
             text = dlg.get_text()
-            self.model.setData(index, text)
+            date = dlg.get_date()
+            self.model.setData(index, (text, date))
 
 
 if __name__ == '__main__':
