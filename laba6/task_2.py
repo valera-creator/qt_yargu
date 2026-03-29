@@ -32,6 +32,11 @@ class Window(QMainWindow):
         self.view.selectionModel().currentChanged.connect(self.update_edit_menu_state)
 
     def add_up_menu(self):
+        """
+        Создает и настраивает верхнее меню приложения (MenuBar).
+        Добавляет пункты 'Создать' и 'Редактировать'.
+        Пункт 'Редактировать' по умолчанию скрыт и неактивен.
+        """
         menubar = self.menuBar()
         menu_create = menubar.addMenu("Меню")
         action_create_menu = menu_create.addAction("Создать")
@@ -45,12 +50,13 @@ class Window(QMainWindow):
 
     @Slot()
     def update_edit_menu_state(self):
-        # Обновляет доступность пункта "Редактировать" в верхнем меню, если есть выделенный элемент
+        """Обновляет доступность пункта "Редактировать" в верхнем меню, если есть выделенный элемент"""
         has_selection = self.view.currentIndex().isValid()
         self.action_edit.setEnabled(has_selection)
         self.action_edit.setVisible(has_selection)
 
     def contextMenuEvent(self, e):
+        """логика обработки контекстного меню"""
         context = QMenu(self)
         click_pos = self.view.viewport().mapFromGlobal(e.globalPos())  # пересчет на координаты окна в виджете, где клик
         index = self.view.indexAt(click_pos)  # элемент в view по координатам
