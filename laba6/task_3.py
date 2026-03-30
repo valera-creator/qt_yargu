@@ -13,6 +13,31 @@ class Wizard(QWizard):
         self.addPage(FIOPage())
         self.addPage(Themes())
 
+    def get_text(self):
+        login = self.field("login")
+        password = self.field("password")
+        surname = self.field("surname").strip()
+        name = self.field("name").strip()
+        patronymic = self.field("patronymic").strip() if self.field("patronymic").strip() else "не выбрано"
+        topic_forest = "да" if self.field("topic_forest") else "нет"
+        topic_coding = "да" if self.field("topic_coding") else "нет"
+        topic_fish = "да" if self.field("topic_fish") else "нет"
+        approval = "да" if self.field("approval") else "нет"
+
+        s = (
+            f"Вы ввели и выбрали:\n"
+            f"Логин: {login};\n"
+            f"Пароль: {password};\n"
+            f"Фамилия: {surname};\n"
+            f"Имя: {name};\n"
+            f"Отчество: {patronymic};\n"
+            f"Лесные походы: {topic_forest};\n"
+            f"Программирование: {topic_coding};\n"
+            f"Рыбалка: {topic_fish};\n"
+            f"Согласие с рассылкой: {approval}"
+        )
+        return s
+
 
 class Window(QMainWindow):
     def __init__(self):
@@ -39,28 +64,7 @@ class Window(QMainWindow):
     def start_wizard(self):
         wizard = Wizard()
         if wizard.exec():
-            login = wizard.field("login")
-            password = wizard.field("password")
-            surname = wizard.field("surname").strip()
-            name = wizard.field("name").strip()
-            patronymic = wizard.field("patronymic").strip() if wizard.field("patronymic").strip() else "не выбрано"
-            topic_forest = "да" if wizard.field("topic_forest") else "нет"
-            topic_coding = "да" if wizard.field("topic_coding") else "нет"
-            topic_fish = "да" if wizard.field("topic_fish") else "нет"
-            approval = "да" if wizard.field("approval") else "нет"
-
-            self.result_label.setText(
-                f"Вы ввели и выбрали:\n"
-                f"Логин: {login};\n"
-                f"Пароль: {password};\n"
-                f"Фамилия: {surname};\n"
-                f"Имя: {name};\n"
-                f"Отчество: {patronymic};\n"
-                f"Лесные походы: {topic_forest};\n"
-                f"Программирование: {topic_coding};\n"
-                f"Рыбалка: {topic_fish};\n"
-                f"Согласие с рассылкой: {approval}"
-            )
+            self.result_label.setText(wizard.get_text())
         else:
             self.result_label.setText("Итог: текущая регистрация не завершилась")
 

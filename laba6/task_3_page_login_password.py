@@ -23,6 +23,7 @@ class LoginPasswordPage(QWizardPage):
         self.password_label = QLabel("Пароль")
         self.password_label.setMinimumWidth(60)
         self.password_line_edit = QLineEdit()
+        self.password_line_edit.setEchoMode(QLineEdit.Password)
         self.password_line_edit.setPlaceholderText("Пароль")
         self.password_line_edit.setMaxLength(max_length_line_edit)
 
