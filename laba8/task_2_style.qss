@@ -1,0 +1,17 @@
+QWidget#greenSquare {
+    background-color: lime;
+    border: 2px solid darkgreen;
+     min-width: 80px;
+     max-width: 80px;
+     min-height: 80px;
+     max-height: 80px;
+}
+
+QWidget#BlueRect {
+background-color: blue;
+    border: 2px solid darkblue;
+     min-width: 160px;
+     max-width: 160px;
+     min-height: 80px;
+     max-height: 80px;
+}
