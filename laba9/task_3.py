@@ -16,6 +16,14 @@ def get_df(path_file):
         quit("Ошибка: в файле отсутствует информация про 2007 год")
 
 
+def check_correct_data(data):
+    for elem in data:
+        try:
+            int(elem)
+        except ValueError:
+            quit(f"{elem} в файле не является числом")
+
+
 class Hurricanes(QMainWindow):
     def __init__(self):
         super().__init__()
@@ -33,6 +41,8 @@ class Hurricanes(QMainWindow):
         self.setCentralWidget(self.layout)
 
     def make_graphic_hurricanes_2007(self):
+        check_correct_data(self.year_2007)
+
         plot_widget = self.layout.addPlot(0, 0)
         plot_widget.showGrid(x=True, y=True, alpha=0.5)
         x = [i + 1 for i in range(len(self.month))]
@@ -55,14 +65,14 @@ class Hurricanes(QMainWindow):
         for i in range(2, len(self.df.columns)):
             try:
                 cnt_hurricane_cur_year = sum(self.df.iloc[:, i].values.tolist())
-            except ValueError as e:
-                quit(f"Ошибка: нашлось не числовое значение в файле: {e}")
+            except TypeError:
+                quit(f"Ошибка: нашлось не числовое значение в файле в количестве ураганов")
             hurricanes_per_years.append(cnt_hurricane_cur_year)
 
         try:
             years = list(map(int, self.df.columns[2:].values.tolist()))
-        except ValueError as e:
-            quit(f"Ошибка: нашлось не числовое значение года в файле: {e}")
+        except ValueError:
+            quit(f"Ошибка: нашлось не числовое значение года в файле")
 
         return years, hurricanes_per_years
 

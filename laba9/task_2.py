@@ -17,6 +17,15 @@ def get_df(path_file):
         quit("Ошибка: столбцы ID, Girth, Height или Volume отсутствуют в файле")
 
 
+def check_correct_data(data):
+    for elem in data:
+        try:
+            if elem < 0:
+                quit("Показатель дерева не может быть отрицательным")
+        except TypeError:
+            quit(f"Показатель дерева {elem} в файле не является числом")
+
+
 class ChartTrees(QMainWindow):
     def __init__(self):
         super().__init__()
@@ -40,6 +49,9 @@ class ChartTrees(QMainWindow):
         plot_widget.setLabel("left", y_text)
 
         plot_widget.showGrid(x=True, y=True, alpha=0.5)
+
+        check_correct_data(x_data)
+        check_correct_data(y_data)
 
         scatter = pg.ScatterPlotItem(
             x=x_data,

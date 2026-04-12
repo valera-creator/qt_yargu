@@ -12,7 +12,7 @@ class Window(QWidget):
 
     def paintEvent(self, arg__0):
         painter = QPainter(self)
-        margin_shapes = 10
+        margin_shapes = self.size_window // 60
 
         # треугольник
         pen_triangle = QPen()
