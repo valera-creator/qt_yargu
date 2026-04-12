@@ -65,9 +65,9 @@ class Hurricanes(QMainWindow):
         for i in range(2, len(self.df.columns)):
             try:
                 cnt_hurricane_cur_year = sum(self.df.iloc[:, i].values.tolist())
+                hurricanes_per_years.append(cnt_hurricane_cur_year)
             except TypeError:
                 quit(f"Ошибка: нашлось не числовое значение в файле в количестве ураганов")
-            hurricanes_per_years.append(cnt_hurricane_cur_year)
 
         try:
             years = list(map(int, self.df.columns[2:].values.tolist()))
