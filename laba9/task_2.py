@@ -6,12 +6,15 @@ import pyqtgraph as pg
 def get_df(path_file):
     try:
         data = pd.read_csv(path_file)
-        _ = data["Girth"], data["Height"], data["Volume"]  # проверка, что csv файл содержит правильный необходимые col
+        # проверка, что csv файл содержит правильный необходимые столбцы
+        _ = data["ID"], data["Girth"], data["Height"], data["Volume"]
         return data
     except FileNotFoundError:
         quit(f"Ошибка: отсутствует файл по пути {path_file}")
     except pd.errors.EmptyDataError:
-        quit("Ошибка: заголовки Girth, Height или Volume отсутствуют в файле")
+        quit("Ошибка: столбцы ID, Girth, Height или Volume отсутствуют в файле")
+    except KeyError:
+        quit("Ошибка: столбцы ID, Girth, Height или Volume отсутствуют в файле")
 
 
 class ChartTrees(QMainWindow):
