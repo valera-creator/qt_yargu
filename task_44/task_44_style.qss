@@ -1,0 +1,19 @@
+QLabel#label_nickname
+{
+    qproperty-alignment: AlignCenter;
+}
+
+QLineEdit#num
+{
+    qproperty-alignment: AlignCenter;
+}
+
+QLineEdit#edit_nickname
+{
+    qproperty-alignment: AlignCenter;
+}
+
+QLabel#error
+{
+    qproperty-alignment: AlignCenter;
+}
