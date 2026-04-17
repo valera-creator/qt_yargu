@@ -2,14 +2,6 @@ from PySide6.QtCore import QAbstractTableModel, Qt, QModelIndex
 import random
 
 
-def generate_num_for_computer():
-    digits = list("0123456789")
-    random.shuffle(digits)
-    if digits[0] == '0':
-        digits[0], digits[1] = digits[1], digits[0]
-    return "".join(digits[:4])
-
-
 class GameModel(QAbstractTableModel):
     def __init__(self, parent=None):
         super().__init__(parent)
@@ -18,6 +10,9 @@ class GameModel(QAbstractTableModel):
 
         self.__num_player1 = ""
         self.__num_player2 = ""
+
+        self.__game_on = False
+        self.__game_end = False
 
     def rowCount(self, parent=None):
         return len(self.__data_model)
@@ -49,10 +44,11 @@ class GameModel(QAbstractTableModel):
         return None
 
     def append_data(self, data_game):
-        cur_attempt = len(self.__data_model) // 2 + 1
-        row_value = (cur_attempt, *data_game)
-        self.__data_model.append(row_value)
-        self.insertRow(len(self.__data_model) - 1)
+        if self.__game_on:
+            cur_attempt = len(self.__data_model) // 2 + 1
+            row_value = (cur_attempt, *data_game)
+            self.__data_model.append(row_value)
+            self.insertRow(len(self.__data_model) - 1)
 
     def removeRows(self, row, count, parent=QModelIndex()):
         if row + count > len(self.__data_model) or count < 1:
@@ -106,3 +102,23 @@ class GameModel(QAbstractTableModel):
         first_player_res = self.__calculate_cows_bulls_player(input_num_player1, self.__num_player2)
         second_player_res = self.__calculate_cows_bulls_player(input_num_player2, self.__num_player1)
         return first_player_res, second_player_res
+
+    def is_game_on(self):
+        return self.__game_on
+
+    def set_game_on(self, val):
+        self.__game_on = val
+
+    def is_game_end(self):
+        return self.__game_end
+
+    def set_game_end(self, val):
+        self.__game_end = val
+
+    @staticmethod
+    def generate_num_for_computer():
+        digits = list("0123456789")
+        random.shuffle(digits)
+        if digits[0] == '0':
+            digits[0], digits[1] = digits[1], digits[0]
+        return "".join(digits[:4])
