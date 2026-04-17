@@ -13,7 +13,7 @@ QLineEdit#edit_nickname
     qproperty-alignment: AlignCenter;
 }
 
-QLabel#error
+QLabel#info
 {
     qproperty-alignment: AlignCenter;
 }

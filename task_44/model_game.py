@@ -81,6 +81,12 @@ class GameModel(QAbstractTableModel):
         else:
             return f"player {default_num_player}"
 
+    def get_num_1(self):
+        return self.__num_player1
+
+    def get_num_2(self):
+        return self.__num_player2
+
     def set_num_1(self, num):
         self.__num_player1 = num
 

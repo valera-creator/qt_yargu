@@ -61,10 +61,10 @@ class PvpPlayers(QWidget):
 
         # поля для сообщения некорректного ввода
         self.info_player1 = QLabel()
-        self.info_player1.setObjectName("error")
+        self.info_player1.setObjectName("info")
         self.info_player1.setWordWrap(True)
         self.info_player2 = QLabel()
-        self.info_player2.setObjectName("error")
+        self.info_player2.setObjectName("info")
         self.info_player2.setWordWrap(True)
 
         # кнопки для показа введенного числа перед игрой
@@ -73,7 +73,7 @@ class PvpPlayers(QWidget):
         self.btn_view_num_player2 = QPushButton("Показать")
         self.btn_view_num_player2.clicked.connect(lambda: self.view_num(self.btn_view_num_player2, self.num_player2))
 
-        # кнопка запуска игры
+        # кнопка управления игрой
         self.btn = QPushButton("Начать")
         self.btn.clicked.connect(self.btn_signal)
 
@@ -110,8 +110,8 @@ class PvpPlayers(QWidget):
     def btn_signal(self):
         """
         подготовка виджетов и содержимое виджетов к игре
-        если игра уже окончена, то пользователь может только нажать "завершить" и начать заново
-        если игра не окончена, то пользователь может или начать её, или продолжить ходить
+        если игра уже окончена, то можно только нажать "завершить" и начать заново
+        если игра не окончена, то выполняется проверка корректности ввода и состояния игры: начало или продолжение хода
         """
         if not self.model.is_game_end():
             res_correct_player1 = self.model.check_correct_num(self.num_player1.text())
@@ -164,7 +164,7 @@ class PvpPlayers(QWidget):
         self.model.set_game_end(False)
 
     def restart_game(self):
-        """возвращение виджетов к стартовому состоянию, удаление истории ходов"""
+        """возвращение виджетов и состояний к стартовому состоянию, удаление истории ходов"""
         self.game_active_changed.emit(False)
         self.name_player1_line_edit.setReadOnly(False)
         self.name_player2_line_edit.setReadOnly(False)
@@ -199,6 +199,7 @@ class PvpPlayers(QWidget):
         self.num_player1.setEnabled(True)
         self.num_player2.setEnabled(True)
 
+        self.model.set_game_on(False)
         self.model.set_game_end(False)
         self.model.clear_data()
 
@@ -238,18 +239,18 @@ class PvpPlayers(QWidget):
         if bulls1 == 4 and bulls2 == 4:
             self.info_player1.setText("Ничья")
             self.info_player2.setText("Ничья")
-            self.num_player1.setText("Ничья")
-            self.num_player2.setText("Ничья")
+            self.num_player1.setText(f"Загаданное число: {self.model.get_num_1()}")
+            self.num_player2.setText(f"Загаданное число: {self.model.get_num_2()}")
         elif bulls1 == 4:
             self.info_player1.setText("Победа!")
             self.info_player2.setText("Поражение!")
-            self.num_player1.setText("Победа!")
-            self.num_player2.setText("Поражение!")
+            self.num_player1.setText(f"Загаданное число: {self.model.get_num_1()}")
+            self.num_player2.setText(f"Загаданное число: {self.model.get_num_2()}")
         else:
             self.info_player1.setText("Поражение!")
             self.info_player2.setText("Победа!")
-            self.num_player1.setText("Поражение!")
-            self.num_player2.setText("Победа!")
+            self.num_player1.setText(f"Загаданное число: {self.model.get_num_1()}")
+            self.num_player2.setText(f"Загаданное число: {self.model.get_num_2()}")
 
         self.num_player1.setEnabled(False)
         self.num_player2.setEnabled(False)
