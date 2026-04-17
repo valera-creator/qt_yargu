@@ -60,12 +60,12 @@ class PvpPlayers(QWidget):
         self.num_player2.setEchoMode(QLineEdit.Password)
 
         # поля для сообщения некорректного ввода
-        self.err_player1 = QLabel()
-        self.err_player1.setObjectName("error")
-        self.err_player1.setWordWrap(True)
-        self.err_player2 = QLabel()
-        self.err_player2.setObjectName("error")
-        self.err_player2.setWordWrap(True)
+        self.info_player1 = QLabel()
+        self.info_player1.setObjectName("error")
+        self.info_player1.setWordWrap(True)
+        self.info_player2 = QLabel()
+        self.info_player2.setObjectName("error")
+        self.info_player2.setWordWrap(True)
 
         # кнопки для показа введенного числа перед игрой
         self.btn_view_num_player1 = QPushButton("Показать")
@@ -87,12 +87,12 @@ class PvpPlayers(QWidget):
         self.v_player1_layout.addWidget(self.name_player1_label)
         self.v_player1_layout.addWidget(self.num_player1)
         self.v_player1_layout.addWidget(self.btn_view_num_player1)
-        self.v_player1_layout.addWidget(self.err_player1)
+        self.v_player1_layout.addWidget(self.info_player1)
         self.v_player2_layout.addWidget(self.name_player2_line_edit)
         self.v_player2_layout.addWidget(self.name_player2_label)
         self.v_player2_layout.addWidget(self.num_player2)
         self.v_player2_layout.addWidget(self.btn_view_num_player2)
-        self.v_player2_layout.addWidget(self.err_player2)
+        self.v_player2_layout.addWidget(self.info_player2)
 
         self.h_game_layout.addLayout(self.v_player1_layout)
         self.h_game_layout.addLayout(self.v_player2_layout)
@@ -106,34 +106,39 @@ class PvpPlayers(QWidget):
         self.vertical_game_layout.addWidget(self.btn_make_move)
         self.setLayout(self.main_layout)
 
+    def action_labels_info(self, res_correct_player1, res_correct_player2):
+        # очистка текста в случае корректного ввода
+        if res_correct_player1[0]:
+            self.info_player1.clear()
+        if res_correct_player2[0]:
+            self.info_player2.clear()
+
+        # уведомление о неправильном вводе
+        if not res_correct_player1[0]:
+            self.info_player1.setText(res_correct_player1[1])
+        if not res_correct_player2[0]:
+            self.info_player2.setText(res_correct_player2[1])
+
     @Slot()
     def start_game(self):
         """подготовка виджетов и содержимое виджетов к игре"""
 
         res_correct_player1 = self.model.check_correct_num(self.num_player1.text())
         res_correct_player2 = self.model.check_correct_num(self.num_player2.text())
-        # очистка текста в случае корректного ввода
-        if res_correct_player1[0]:
-            self.err_player1.clear()
-        if res_correct_player2[0]:
-            self.err_player2.clear()
 
-        # уведомление о неправильном вводе
-        if not res_correct_player1[0]:
-            self.err_player1.setText(res_correct_player1[1])
-        if not res_correct_player2[0]:
-            self.err_player2.setText(res_correct_player2[1])
-
+        self.action_labels_info(res_correct_player1, res_correct_player2)
         res_correct = res_correct_player1[0] and res_correct_player2[0]
-        if res_correct:  # начало игры
+
+        # начало игры
+        if res_correct:
             self.game_active_changed.emit(True)
             self.name_player1_line_edit.setReadOnly(True)
             self.name_player2_line_edit.setReadOnly(True)
             self.name_player1_line_edit.setVisible(False)
             self.name_player2_line_edit.setVisible(False)
 
-            self.err_player1.clear()
-            self.err_player2.clear()
+            self.info_player1.clear()
+            self.info_player2.clear()
 
             self.model.set_num_1(self.num_player1.text())
             self.model.set_num_2(self.num_player2.text())
@@ -175,8 +180,8 @@ class PvpPlayers(QWidget):
         self.num_player1.clear()
         self.num_player2.clear()
 
-        self.err_player1.clear()
-        self.err_player2.clear()
+        self.info_player1.clear()
+        self.info_player2.clear()
 
         self.btn_view_num_player1.setText("Показать")
         self.btn_view_num_player2.setText("Показать")
@@ -193,6 +198,9 @@ class PvpPlayers(QWidget):
         self.num_player1.setPlaceholderText("загадайте 4-значное число")
         self.num_player2.setPlaceholderText("загадайте 4-значное число")
 
+        self.num_player1.setEnabled(True)
+        self.num_player2.setEnabled(True)
+
         self.model.clear_data()
 
     @Slot()
@@ -203,22 +211,24 @@ class PvpPlayers(QWidget):
 
         res_correct_player1 = self.model.check_correct_num(first_num)
         res_correct_player2 = self.model.check_correct_num(second_num)
-        if not res_correct_player1[0]:
-            self.err_player1.setText(res_correct_player1[1])
-        if not res_correct_player2[0]:
-            self.err_player2.setText(res_correct_player2[1])
-        else:
-            res_correct = res_correct_player1[0] and res_correct_player2[0]
-            if res_correct:
-                self.err_player1.clear()
-                self.err_player2.clear()
 
-                first_player_res, second_player_res = self.model.calculate_cows_bulls(first_num, second_num)
-                self.model.append_data([self.name_player1_label.text(), first_num, *first_player_res])
-                self.model.append_data([self.name_player2_label.text(), second_num, *second_player_res])
+        self.action_labels_info(res_correct_player1, res_correct_player2)
+        res_correct = res_correct_player1[0] and res_correct_player2[0]
 
-                bulls1, cows1 = first_player_res
-                bulls2, cows2 = second_player_res
+        # продолжение игры
+        if res_correct:
+            self.info_player1.clear()
+            self.info_player2.clear()
+
+            first_player_res, second_player_res = self.model.calculate_cows_bulls(first_num, second_num)
+            self.model.append_data([self.name_player1_label.text(), first_num, *first_player_res])
+            self.model.append_data([self.name_player2_label.text(), second_num, *second_player_res])
+
+            bulls1, cows1 = first_player_res
+            bulls2, cows2 = second_player_res
+
+            if bulls1 == 4 or bulls2 == 4:
+                self.make_game_over(bulls1, bulls2)
 
     @Slot()
     def view_num(self, btn, num):
@@ -229,3 +239,17 @@ class PvpPlayers(QWidget):
         else:
             btn.setText("Показать")
             num.setEchoMode(QLineEdit.Password)
+
+    def make_game_over(self, bulls1, bulls2):
+        if bulls1 == 4 and bulls2 == 4:
+            self.info_player1.setText("ничья")
+            self.info_player2.setText("ничья")
+        elif bulls1 == 4:
+            self.info_player1.setText("победа!")
+            self.info_player2.setText("поражение!")
+        else:
+            self.info_player1.setText("поражение!")
+            self.info_player2.setText("победа!")
+
+        self.num_player1.setEnabled(False)
+        self.num_player2.setEnabled(False)
