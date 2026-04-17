@@ -1,3 +1,4 @@
+from PySide6.QtCore import Slot
 from PySide6.QtWidgets import QMainWindow, QApplication, QTabWidget
 from pvp_players import PvpPlayers
 from player_vs_computer import PlayerVsComputer
@@ -28,10 +29,15 @@ class CowsBulls(QMainWindow):
         self.player_vs_computer = PlayerVsComputer()
         self.tab.addTab(self.player_vs_computer, "режим PVC")
 
-        # self.tab.tabBar().setEnabled(False) # если игра активна, то переход по вкладкам заблокировать
-
         self.add_up_menu()
         self.setCentralWidget(self.tab)
+
+        self.pvp_players.game_active_changed.connect(self.toggle_tabs)
+        self.player_vs_computer.game_active_changed.connect(self.toggle_tabs)
+
+    @Slot(bool)
+    def toggle_tabs(self, is_active):
+        self.tab.tabBar().setEnabled(not is_active)
 
     def add_up_menu(self):
         """создание верхнего меню в главном окне"""
@@ -45,7 +51,7 @@ class CowsBulls(QMainWindow):
 
     def make_new_game(self):
         active_widget = self.tab.currentWidget()
-        print(active_widget)
+        active_widget.restart_game()
 
     def check_rules(self):
         """открывается диалог с текстом правил игры"""

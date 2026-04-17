@@ -19,8 +19,6 @@ class GameModel(QAbstractTableModel):
         self.__num_player1 = ""
         self.__num_player2 = ""
 
-        self.__game_on = False
-
     def rowCount(self, parent=None):
         return len(self.__data_model)
 
@@ -65,8 +63,10 @@ class GameModel(QAbstractTableModel):
         return True
 
     def clear_data(self):
-        """полное удаление всех данных о ходах"""
+        """полное удаление всех данных о ходах и загаданных чисел"""
         self.removeRows(row=0, count=len(self.__data_model))
+        self.__num_player1 = ""
+        self.__num_player2 = ""
 
     @staticmethod
     def check_correct_num(num):
@@ -76,8 +76,33 @@ class GameModel(QAbstractTableModel):
             return False, "Число должно состоять из уникальных цифр"
         return True,
 
-    def calculate_cows_bulls(self):
-        pass
+    @staticmethod
+    def get_name(name, default_num_player):
+        text = "".join(name.split())
+        text = text.replace("ㅤ", "")
+        if text:
+            return name
+        else:
+            return f"player {default_num_player}"
 
-    def is_game_on(self):
-        return self.__game_on
+    def set_num_1(self, num):
+        self.__num_player1 = num
+
+    def set_num_2(self, num):
+        self.__num_player2 = num
+
+    @staticmethod
+    def __calculate_cows_bulls_player(num_input, player_num):
+        cows = 0
+        bulls = 0
+        for i in range(len(num_input)):
+            if player_num[i] == num_input[i]:
+                bulls += 1
+            elif num_input[i] in player_num:
+                cows += 1
+        return bulls, cows
+
+    def calculate_cows_bulls(self, input_num_player1, input_num_player2):
+        first_player_res = self.__calculate_cows_bulls_player(input_num_player1, self.__num_player2)
+        second_player_res = self.__calculate_cows_bulls_player(input_num_player2, self.__num_player1)
+        return first_player_res, second_player_res

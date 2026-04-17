@@ -1,10 +1,13 @@
-from PySide6.QtCore import QRegularExpression, Slot, Qt
+from PySide6.QtCore import QRegularExpression, Slot, Qt, Signal
 from PySide6.QtGui import QRegularExpressionValidator
 from PySide6.QtWidgets import QWidget, QVBoxLayout, QHBoxLayout, QTableView, QHeaderView, QLineEdit, QLabel, QPushButton
 from model_game import GameModel
 
 
 class PlayerVsComputer(QWidget):
+    # сигнал для того, чтобы в главном окне отключить переключение вкладок
+    game_active_changed = Signal(bool)
+
     def __init__(self):
         super().__init__()
         self.setMinimumSize(700, 500)
@@ -22,9 +25,10 @@ class PlayerVsComputer(QWidget):
         self.view.verticalHeader().setVisible(False)
 
         # никнеймы игрока (lineedit, ввод)
+        max_length = 16
         self.name_player1_line_edit = QLineEdit()
-        self.name_player1_line_edit.setPlaceholderText("ник 1-го игрока (макс 20 символов)")
-        self.name_player1_line_edit.setMaxLength(20)
+        self.name_player1_line_edit.setPlaceholderText(f"ник 1-го игрока (макс {max_length} символов)")
+        self.name_player1_line_edit.setMaxLength(max_length)
         self.name_player1_line_edit.setObjectName("edit_nickname")
 
         # никнеймы игроков (label, чтение)
@@ -34,7 +38,7 @@ class PlayerVsComputer(QWidget):
         # поля ввода
         regex_num = QRegularExpression(r"^[1-9]\d{3}$")
         self.num_player1 = QLineEdit()
-        self.num_player1.setPlaceholderText("введите 4-значное число")
+        self.num_player1.setPlaceholderText("загадайте 4-значное число")
         self.num_player1.setValidator(QRegularExpressionValidator(regex_num))
         self.num_player1.setObjectName("num")
         self.num_player1.setEchoMode(QLineEdit.Password)
@@ -60,4 +64,8 @@ class PlayerVsComputer(QWidget):
 
     @Slot()
     def start(self):
-        pass
+        self.game_active_changed.emit(True)
+
+    def restart_game(self):
+        self.game_active_changed.emit(False)
+        self.model.clear_data()
