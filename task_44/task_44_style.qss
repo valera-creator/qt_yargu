@@ -1,19 +1,124 @@
-QLabel#label_nickname
+QWidget#dialog_widget
 {
+    background-color: #2f3038;
+}
+
+QLabel#dialog_label{
+    background-color: #2f3038;
+    color: white;
+    font-size: 15px;
+}
+
+QDialogButtonBox QPushButton {
+    background-color: transparent;
+    color: white;
+    border: 1px solid #2196F3;
+    border-radius: 2px;
+    min-height: 25px;
+    padding: 0 12px;
+    font-weight: bold;
+}
+
+QDialogButtonBox QPushButton:hover {
+    background-color: #0b7dda;
+}
+
+QWidget#widget_game{
+    background-color: #2f3038;
+}
+
+
+QTableView {
+    background-color: #2f3038;
+    color: #ffffff;
+    border: 1px solid #ffffff;
+    border-radius: 2px;
+    font-size: 14px;
+    padding: 2px;
+    gridline-color: #ffffff;
+}
+
+QHeaderView::section {
+    background-color: #2f3038;
+    color: #ffffff;
+    font-weight: bold;
+    padding: 6px;
+    border: 1px solid #ffffff;
+}
+
+QLabel#label_nickname{
+    qproperty-alignment: AlignCenter;
+    color: white;
+    font-weight: bold;
+    font-size: 18px;
+
+}
+
+QLineEdit#num {
+    background-color: transparent;
+    color: #ffffff;
+    border: 2px solid green;
+    border-radius: 2px;
+    min-height: 25px;
+    font-weight: bold;
+    font-size: 13px;
     qproperty-alignment: AlignCenter;
 }
 
-QLineEdit#num
-{
+QLineEdit#edit_nickname {
+    background-color: transparent;
+    color: #ffffff;
+    border: 2px solid #740c75;
+    border-radius: 3px;
+    min-height: 25px;
+    font-weight: bold;
+    font-size: 13px;
     qproperty-alignment: AlignCenter;
 }
 
-QLineEdit#edit_nickname
-{
+QLabel#info{
     qproperty-alignment: AlignCenter;
+    color: white;
+    font-size: 13px;
+    font-weight: bold;
 }
 
-QLabel#info
-{
-    qproperty-alignment: AlignCenter;
+QPushButton#see_btn {
+    background-color: transparent;
+    color: #3b82f6;
+    border: 1px solid #3b82f6;
+    border-radius: 2px;
+    min-height: 25px;
+    padding: 0 12px;
+    font-weight: bold;
+}
+
+QPushButton#see_btn:hover {
+    background-color: #3b82f6;
+    color: #ffffff;
+}
+
+QPushButton#see_btn:pressed {
+    background-color: #2563eb;
+    border-color: #2563eb;
+}
+
+QPushButton#btn_game{
+    background-color: transparent;
+    color: orange;
+    border: 1px solid orange;
+    border-radius: 2px;
+    min-height: 25px;
+    padding: 0 12px;
+    font-weight: bold;
+}
+
+QPushButton#btn_game:hover {
+    background-color: orange;
+    color: #ffffff;
+}
+
+QPushButton#btn_game:pressed {
+    background-color: #F57C00;
+    border-color: #F57C00;
 }

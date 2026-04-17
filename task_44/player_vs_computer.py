@@ -12,6 +12,9 @@ class PlayerVsComputer(QWidget):
         super().__init__()
         self.setMinimumSize(700, 500)
         self.setWindowTitle("PVC")
+        self.setAttribute(Qt.WidgetAttribute.WA_StyledBackground, True)  # для отрисовки фона виджета
+        self.setObjectName("widget_game")
+
         self.bot_name = "компьютер"
 
         self.model = GameModel()
@@ -49,6 +52,7 @@ class PlayerVsComputer(QWidget):
 
         # кнопка запуска игры
         self.btn = QPushButton("Начать")
+        self.btn.setObjectName("btn_game")
         self.btn.clicked.connect(self.btn_signal)
 
         self.vertical_game_layout.addWidget(self.name_player_line_edit)

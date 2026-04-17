@@ -13,6 +13,8 @@ class PvpPlayers(QWidget):
         super().__init__()
 
         self.setWindowTitle("PVP")
+        self.setAttribute(Qt.WidgetAttribute.WA_StyledBackground, True)  # для отрисовки фона виджета
+        self.setObjectName("widget_game")
 
         # layouts
         self.main_layout = QHBoxLayout()
@@ -68,13 +70,16 @@ class PvpPlayers(QWidget):
         self.info_player2.setWordWrap(True)
 
         # кнопки для показа введенного числа перед игрой
-        self.btn_view_num_player1 = QPushButton("Показать")
+        self.btn_view_num_player1 = QPushButton("Показать число")
+        self.btn_view_num_player1.setObjectName("see_btn")
         self.btn_view_num_player1.clicked.connect(lambda: self.view_num(self.btn_view_num_player1, self.num_player1))
-        self.btn_view_num_player2 = QPushButton("Показать")
+        self.btn_view_num_player2 = QPushButton("Показать число")
+        self.btn_view_num_player2.setObjectName("see_btn")
         self.btn_view_num_player2.clicked.connect(lambda: self.view_num(self.btn_view_num_player2, self.num_player2))
 
         # кнопка управления игрой
         self.btn = QPushButton("Начать")
+        self.btn.setObjectName("btn_game")
         self.btn.clicked.connect(self.btn_signal)
 
         self.v_player1_layout.addWidget(self.name_player1_line_edit)
@@ -182,8 +187,8 @@ class PvpPlayers(QWidget):
         self.info_player1.clear()
         self.info_player2.clear()
 
-        self.btn_view_num_player1.setText("Показать")
-        self.btn_view_num_player2.setText("Показать")
+        self.btn_view_num_player1.setText("Показать число")
+        self.btn_view_num_player2.setText("Показать число")
 
         self.name_player1_label.clear()
         self.name_player2_label.clear()
@@ -228,10 +233,10 @@ class PvpPlayers(QWidget):
     def view_num(self, btn, num):
         """метод меняет текст на кнопке и показывает/скрывает введенное число"""
         if num.echoMode() == QLineEdit.EchoMode.Password:
-            btn.setText("Скрыть")
+            btn.setText("Скрыть число")
             num.setEchoMode(QLineEdit.Normal)
         else:
-            btn.setText("Показать")
+            btn.setText("Показать число")
             num.setEchoMode(QLineEdit.Password)
 
     def make_game_over(self, bulls1, bulls2):

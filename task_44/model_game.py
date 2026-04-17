@@ -38,6 +38,9 @@ class GameModel(QAbstractTableModel):
 
     def data(self, index, role=Qt.DisplayRole):
         """возврат данных для отображения"""
+        if role == Qt.ItemDataRole.TextAlignmentRole:  # выравнивание
+            return Qt.AlignmentFlag.AlignCenter
+
         if role == Qt.DisplayRole:
             row_value = self.__data_model[index.row()]
             return row_value[index.column()]

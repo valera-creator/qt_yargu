@@ -5,11 +5,13 @@ class RulesDialog(QDialog):
     def __init__(self, text):
         super().__init__()
         self.setWindowTitle("Правила")
+        self.setObjectName("dialog_widget")
         self.layout = QVBoxLayout()
 
         self.label_text = QLabel()
         self.label_text.setWordWrap(True)
         self.label_text.setText(text)
+        self.label_text.setObjectName("dialog_label")
 
         self.scroll_area = QScrollArea()
         self.scroll_area.setWidgetResizable(True)

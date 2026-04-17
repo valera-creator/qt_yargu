@@ -5,21 +5,30 @@ from player_vs_computer import PlayerVsComputer
 from rules_dialog import RulesDialog
 
 
-def get_text_rules():
+def get_text_rules(filename):
     try:
-        with open("text_rules.txt", mode='r', encoding="utf-8") as file:
+        with open(filename, mode='r', encoding="utf-8") as file:
             return " ".join(file.readlines())
     except FileNotFoundError:
-        exit("Ошибка: файл text_rules.txt отсутствует")
+        exit(f"Ошибка: файл {filename} отсутствует")
+
+
+def get_style(filename):
+    try:
+        with open(filename, "r") as f:
+            data = f.read()
+        return data
+    except FileNotFoundError:
+        exit(f"Ошибка: файл  {filename} отсутствует")
 
 
 class CowsBulls(QMainWindow):
     def __init__(self):
         super().__init__()
-        self.setMinimumSize(1050, 500)
+        self.setMinimumSize(1210, 500)
         self.setWindowTitle("Коровы и быки")
 
-        self.text_rules = get_text_rules()
+        self.text_rules = get_text_rules("text_rules.txt")
 
         self.tab = QTabWidget()
 
@@ -63,7 +72,6 @@ if __name__ == "__main__":
     app = QApplication([])
     window = CowsBulls()
     window.show()
-    with open("task_44_style.qss", "r") as f:
-        style = f.read()
-        app.setStyleSheet(style)
+    style = get_style("task_44_style.qss")
+    app.setStyleSheet(style)
     app.exec()
