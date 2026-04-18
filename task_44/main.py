@@ -46,6 +46,7 @@ class CowsBulls(QMainWindow):
 
     @Slot(bool)
     def toggle_tabs(self, is_active):
+        """обновление доступа переключения между вкладками в зависимости от сигнала"""
         self.tab.tabBar().setEnabled(not is_active)
 
     def add_up_menu(self):
@@ -58,10 +59,13 @@ class CowsBulls(QMainWindow):
         action_check_rules_menu = menu_create.addAction("Правила игры")
         action_check_rules_menu.triggered.connect(self.check_rules)
 
+    @Slot()
     def make_new_game(self):
+        """на виджете, который связан с открытой вкладкой вызывает метод перезапуска игры"""
         active_widget = self.tab.currentWidget()
         active_widget.restart_game()
 
+    @Slot()
     def check_rules(self):
         """открывается диалог с текстом правил игры"""
         dl = RulesDialog(self.text_rules)

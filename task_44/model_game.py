@@ -11,8 +11,8 @@ class GameModel(QAbstractTableModel):
         self.__num_player1 = ""
         self.__num_player2 = ""
 
-        self.__game_on = False
-        self.__game_end = False
+        self.__game_on = False  # активна ли игра
+        self.__game_end = False  # закончена ли игра
 
     def rowCount(self, parent=None):
         return len(self.__data_model)
@@ -32,8 +32,6 @@ class GameModel(QAbstractTableModel):
             return None
         if orientation == Qt.Horizontal:
             return self.__headers[section]
-        if orientation == Qt.Vertical:
-            return f"{section + 1}"  # Нумерация с 1
         return section
 
     def data(self, index, role=Qt.DisplayRole):
@@ -47,6 +45,7 @@ class GameModel(QAbstractTableModel):
         return None
 
     def append_data(self, data_game):
+        """добавление данных только в том случае, если идёт игра"""
         if self.__game_on:
             cur_attempt = len(self.__data_model) // 2 + 1
             row_value = (cur_attempt, *data_game)
@@ -69,6 +68,7 @@ class GameModel(QAbstractTableModel):
 
     @staticmethod
     def check_correct_num(num):
+        """проверка, что введенное число четерёхзначное и состоит из уникальных цифр"""
         if len(num) != 4:
             return False, "Число должно быть четырёхзначным"
         if len(set(num)) != 4:
@@ -77,6 +77,7 @@ class GameModel(QAbstractTableModel):
 
     @staticmethod
     def get_name(name, default_num_player):
+        """возвращает никнейм, если он не пустой, иначе вернет дефолтный никнейм"""
         text = "".join(name.split())
         text = text.replace("ㅤ", "")
         if text:
@@ -85,19 +86,24 @@ class GameModel(QAbstractTableModel):
             return f"player {default_num_player}"
 
     def get_num_1(self):
+        """возвращает загаданное число первого игрока"""
         return self.__num_player1
 
     def get_num_2(self):
+        """возвращает загаданное число второго игрока"""
         return self.__num_player2
 
     def set_num_1(self, num):
+        """устанавливает загаданное число первого игрока"""
         self.__num_player1 = num
 
     def set_num_2(self, num):
+        """устанавливает загаданное число второго игрока"""
         self.__num_player2 = num
 
     @staticmethod
     def __calculate_cows_bulls_player(num_input, player_num):
+        """возврат количества быков и коров"""
         cows = 0
         bulls = 0
         for i in range(len(num_input)):
@@ -108,20 +114,25 @@ class GameModel(QAbstractTableModel):
         return bulls, cows
 
     def calculate_cows_bulls(self, input_num_player1, input_num_player2):
+        """возврат количества быков и коров для каждого игрока"""
         first_player_res = self.__calculate_cows_bulls_player(input_num_player1, self.__num_player2)
         second_player_res = self.__calculate_cows_bulls_player(input_num_player2, self.__num_player1)
         return first_player_res, second_player_res
 
     def is_game_on(self):
+        """проверяет, активна ли сейчас игра"""
         return self.__game_on
 
     def set_game_on(self, val):
+        """устанавливает флаг активности игры"""
         self.__game_on = val
 
     def is_game_end(self):
+        """проверяет, завершена ли игра"""
         return self.__game_end
 
     def set_game_end(self, val):
+        """фиксирует факт завершения игры"""
         self.__game_end = val
 
     @staticmethod
@@ -138,6 +149,7 @@ class GameModel(QAbstractTableModel):
 
     @staticmethod
     def generate_num_for_computer():
+        """возврат сгенерированного числа для компьютера"""
         digits = list("0123456789")
         random.shuffle(digits)
         if digits[0] == '0':
