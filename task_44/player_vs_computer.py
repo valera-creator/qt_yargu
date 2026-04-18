@@ -10,7 +10,6 @@ class PlayerVsComputer(QWidget):
 
     def __init__(self):
         super().__init__()
-        self.setMinimumSize(700, 500)
         self.setWindowTitle("PVC")
         self.setAttribute(Qt.WidgetAttribute.WA_StyledBackground, True)  # для отрисовки фона виджета
         self.setObjectName("widget_game")
@@ -144,18 +143,19 @@ class PlayerVsComputer(QWidget):
         bulls_player, cows_player = player_res
         bulls_computer, cows_computer = computer_res
 
-        if bulls_player == 4 or bulls_computer == 4:
-            self.make_game_over(bulls_player, bulls_computer)
+        game_over, winner = self.model.check_game_over(bulls_player, bulls_computer, ["ничья", "первый", "второй"])
+        if game_over:
+            self.make_game_over(winner)
 
-    def make_game_over(self, bulls_player, bulls_computer):
+    def make_game_over(self, winner):
         """вывод текста исхода игры, блокировка ввода, установка состояния завершения игры"""
-        if bulls_player == 4 and bulls_computer == 4:
+        if winner == "ничья":
             self.info_player.setText("Ничья")
             self.num_player.setText(
                 f"Ваше загаданное число: {self.model.get_num_1()}, "
                 f"загаданное число компьютера: {self.model.get_num_2()}"
             )
-        elif bulls_player == 4:
+        elif winner == "первый":
             self.info_player.setText("Победа!")
             self.num_player.setText(
                 f"Ваше загаданное число: {self.model.get_num_1()}, "

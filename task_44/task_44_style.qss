@@ -1,5 +1,4 @@
-QWidget#dialog_widget
-{
+QWidget#dialog_widget{
     background-color: #2f3038;
 }
 

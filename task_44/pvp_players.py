@@ -11,7 +11,6 @@ class PvpPlayers(QWidget):
 
     def __init__(self):
         super().__init__()
-
         self.setWindowTitle("PVP")
         self.setAttribute(Qt.WidgetAttribute.WA_StyledBackground, True)  # для отрисовки фона виджета
         self.setObjectName("widget_game")
@@ -104,6 +103,16 @@ class PvpPlayers(QWidget):
         self.vertical_game_layout.addWidget(self.btn)
         self.setLayout(self.main_layout)
 
+    @Slot()
+    def view_num(self, btn, num):
+        """метод меняет текст на кнопке и показывает/скрывает введенное число"""
+        if num.echoMode() == QLineEdit.EchoMode.Password:
+            btn.setText("Скрыть число")
+            num.setEchoMode(QLineEdit.Normal)
+        else:
+            btn.setText("Показать число")
+            num.setEchoMode(QLineEdit.Password)
+
     def notify_uncorrected(self, res_correct_player1, res_correct_player2):
         """уведомление о неправильном вводе"""
         if not res_correct_player1[0]:
@@ -136,6 +145,7 @@ class PvpPlayers(QWidget):
     def start_game(self):
         """настройка для запуска игры, переход в режим начала игры"""
         self.game_active_changed.emit(True)
+
         self.name_player1_line_edit.setReadOnly(True)
         self.name_player2_line_edit.setReadOnly(True)
         self.name_player1_line_edit.setVisible(False)
@@ -171,6 +181,7 @@ class PvpPlayers(QWidget):
     def restart_game(self):
         """возвращение виджетов и состояний к стартовому состоянию, удаление истории ходов"""
         self.game_active_changed.emit(False)
+
         self.name_player1_line_edit.setReadOnly(False)
         self.name_player2_line_edit.setReadOnly(False)
         self.name_player1_line_edit.setVisible(True)
@@ -226,27 +237,18 @@ class PvpPlayers(QWidget):
         bulls1, cows1 = first_player_res
         bulls2, cows2 = second_player_res
 
-        if bulls1 == 4 or bulls2 == 4:
-            self.make_game_over(bulls1, bulls2)
+        game_over, winner = self.model.check_game_over(bulls1, bulls2, ["ничья", "первый", "второй"])
+        if game_over:
+            self.make_game_over(winner)
 
-    @Slot()
-    def view_num(self, btn, num):
-        """метод меняет текст на кнопке и показывает/скрывает введенное число"""
-        if num.echoMode() == QLineEdit.EchoMode.Password:
-            btn.setText("Скрыть число")
-            num.setEchoMode(QLineEdit.Normal)
-        else:
-            btn.setText("Показать число")
-            num.setEchoMode(QLineEdit.Password)
-
-    def make_game_over(self, bulls1, bulls2):
+    def make_game_over(self, winner):
         """вывод текста исхода игры, блокировка ввода, установка состояния завершения игры"""
-        if bulls1 == 4 and bulls2 == 4:
+        if winner == "ничья":
             self.info_player1.setText("Ничья")
             self.info_player2.setText("Ничья")
             self.num_player1.setText(f"Загаданное число: {self.model.get_num_1()}")
             self.num_player2.setText(f"Загаданное число: {self.model.get_num_2()}")
-        elif bulls1 == 4:
+        elif winner == "первый":
             self.info_player1.setText("Победа!")
             self.info_player2.setText("Поражение!")
             self.num_player1.setText(f"Загаданное число: {self.model.get_num_1()}")

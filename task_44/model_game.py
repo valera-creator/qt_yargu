@@ -125,6 +125,18 @@ class GameModel(QAbstractTableModel):
         self.__game_end = val
 
     @staticmethod
+    def check_game_over(bulls1, bulls2, issue):
+        """возвращает, закончилась ли игра и исход игры"""
+        if bulls1 == 4 and bulls2 == 4:
+            return True, issue[0]
+        elif bulls1 == 4:
+            return True, issue[1]
+        elif bulls2 == 4:
+            return True, issue[2]
+        else:
+            return False, None
+
+    @staticmethod
     def generate_num_for_computer():
         digits = list("0123456789")
         random.shuffle(digits)
