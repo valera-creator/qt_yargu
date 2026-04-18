@@ -220,7 +220,7 @@ class PvpPlayers(QWidget):
 
         self.model.set_game_on(False)
         self.model.set_game_end(False)
-        self.model.clear_data()
+        self.model.clear_data_game()
 
     def event_game(self):
         """обработка самой игры"""
@@ -230,7 +230,7 @@ class PvpPlayers(QWidget):
         self.info_player1.clear()
         self.info_player2.clear()
 
-        first_player_res, second_player_res = self.model.calculate_cows_bulls(first_num, second_num)
+        first_player_res, second_player_res = self.model.calculate_all_cows_bulls(first_num, second_num)
         self.model.append_data([self.name_player1_label.text(), first_num, *first_player_res])
         self.model.append_data([self.name_player2_label.text(), second_num, *second_player_res])
 

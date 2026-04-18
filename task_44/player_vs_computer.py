@@ -95,7 +95,7 @@ class PlayerVsComputer(QWidget):
 
         self.model.set_num_1(self.num_player.text())
         num_pc = self.model.generate_num_for_computer()
-        self.model.set_num_2(num_pc)
+        self.model.set_num_2_computer_make_combination(num_pc)
 
         self.num_player.clear()
         self.num_player.setPlaceholderText("Угадайте 4-значное число компьютера")
@@ -127,14 +127,14 @@ class PlayerVsComputer(QWidget):
         self.model.set_game_on(False)
         self.model.set_game_end(False)
 
-        self.model.clear_data()
+        self.model.clear_data_game()
 
     def event_game(self):
         """обработка самой игры"""
         player_num = self.num_player.text()
-        computer_num = self.model.generate_num_for_computer()  # случайное число для угадывания
+        computer_num = self.model.make_action_computer()  # ход
 
-        player_res, computer_res = self.model.calculate_cows_bulls(player_num, computer_num)
+        player_res, computer_res = self.model.calculate_all_cows_bulls(player_num, computer_num)
         self.model.append_data([self.name_player_label.text(), player_num, *player_res])
         self.model.append_data([self.bot_name, computer_num, *computer_res])
 
@@ -147,6 +147,9 @@ class PlayerVsComputer(QWidget):
         game_over, winner = self.model.check_game_over(bulls_player, bulls_computer, ["ничья", "первый", "второй"])
         if game_over:
             self.make_game_over(winner)
+        else:
+            # заготовка для следующего хода
+            self.model.make_action_computer(computer_num, bulls_computer, cows_computer)
 
     def make_game_over(self, winner):
         """вывод текста исхода игры, блокировка ввода, установка состояния завершения игры"""

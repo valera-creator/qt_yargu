@@ -1,4 +1,5 @@
 from PySide6.QtCore import QAbstractTableModel, Qt, QModelIndex
+from itertools import permutations
 import random
 
 
@@ -13,6 +14,9 @@ class GameModel(QAbstractTableModel):
 
         self.__game_on = False  # активна ли игра
         self.__game_end = False  # закончена ли игра
+
+        self.__all_combinations = ["".join(p) for p in permutations("0123456789", 4) if p[0] != '0']
+        self.__combinations = self.__all_combinations.copy()
 
     def rowCount(self, parent=None):
         return len(self.__data_model)
@@ -60,7 +64,7 @@ class GameModel(QAbstractTableModel):
         self.endRemoveRows()
         return True
 
-    def clear_data(self):
+    def clear_data_game(self):
         """полное удаление всех данных о ходах и загаданных чисел"""
         self.removeRows(row=0, count=len(self.__data_model))
         self.__num_player1 = ""
@@ -101,8 +105,14 @@ class GameModel(QAbstractTableModel):
         """устанавливает загаданное число второго игрока"""
         self.__num_player2 = num
 
+    def set_num_2_computer_make_combination(self, num):
+        """устанавливает загаданное число компьютера и обновляет список комбинаций для компьютера"""
+        self.__num_player2 = num
+        self.__combinations = self.__all_combinations.copy()
+        random.shuffle(self.__combinations)  # чтобы разные числа загадывались
+
     @staticmethod
-    def __calculate_cows_bulls_player(num_input, player_num):
+    def __calculate_cows_bulls(num_input, player_num):
         """возврат количества быков и коров"""
         cows = 0
         bulls = 0
@@ -113,10 +123,10 @@ class GameModel(QAbstractTableModel):
                 cows += 1
         return bulls, cows
 
-    def calculate_cows_bulls(self, input_num_player1, input_num_player2):
+    def calculate_all_cows_bulls(self, input_num_player1, input_num_player2):
         """возврат количества быков и коров для каждого игрока"""
-        first_player_res = self.__calculate_cows_bulls_player(input_num_player1, self.__num_player2)
-        second_player_res = self.__calculate_cows_bulls_player(input_num_player2, self.__num_player1)
+        first_player_res = self.__calculate_cows_bulls(input_num_player1, self.__num_player2)
+        second_player_res = self.__calculate_cows_bulls(input_num_player2, self.__num_player1)
         return first_player_res, second_player_res
 
     def is_game_on(self):
@@ -155,3 +165,19 @@ class GameModel(QAbstractTableModel):
         if digits[0] == '0':
             digits[0], digits[1] = digits[1], digits[0]
         return "".join(digits[:4])
+
+    def filter_combination(self, prev_guess, prev_bulls, prev_cows):
+        """
+        оставляет только те числа, в которых количество коров и быков совпадает с названным числом компьютера
+        число коров и быков получены из игры: сколько быков и коров в числе, которое назвал компьютер
+        """
+        self.__combinations = list(
+            filter(lambda x: self.__calculate_cows_bulls(x, prev_guess) == (prev_bulls, prev_cows),
+                   self.__combinations))
+
+    def make_action_computer(self, prev_guess=None, prev_bulls=None, prev_cows=None):
+        """если параметры переданы, то пересчет комбинаций, а иначе ход"""
+        if prev_guess is None or prev_bulls is None or prev_cows is None:
+            return self.__combinations[0]
+        else:
+            self.filter_combination(prev_guess, prev_bulls, prev_cows)
