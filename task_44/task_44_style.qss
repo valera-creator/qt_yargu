@@ -1,3 +1,8 @@
+QMainWindow{
+    background-color: #2f3038;
+}
+
+/* диалоговое окно с правилами */
 QWidget#dialog_widget{
     background-color: #2f3038;
 }
@@ -22,10 +27,11 @@ QDialogButtonBox QPushButton:hover {
     background-color: #0b7dda;
 }
 
+
+/* игровые виджеты */
 QWidget#widget_game{
     background-color: #2f3038;
 }
-
 
 QTableView {
     background-color: #2f3038;
@@ -120,4 +126,70 @@ QPushButton#btn_game:hover {
 QPushButton#btn_game:pressed {
     background-color: #F57C00;
     border-color: #F57C00;
+}
+
+/* верхнее меню */
+QMenuBar {
+    background-color: #2f3038;
+    color: #ffffff;
+    border-bottom: 1px solid #4a4b55;
+}
+
+QMenuBar::item {
+    background-color: black;
+    padding: 4px 8px;
+    border-radius: 2px;
+}
+
+QMenuBar::item:selected {
+    background-color: #3a3b45;
+}
+
+
+/* элементы верхнего меню */
+QMenu {
+    background-color: #3a3b45;
+    border: 1px solid #555555;
+    border-radius: 4px;
+    padding: 4px 0px;
+}
+
+QMenu::item {
+    padding: 5px 20px;
+    color: #ffffff;
+}
+
+QMenu::item:selected {
+    background-color: #2196F3;
+    color: #ffffff;
+    border-radius: 2px;
+}
+
+
+/* вкладки */
+QTabWidget::pane {
+    border: none;
+    background-color: #2f3038;
+}
+
+QTabBar::tab {
+    background-color: #3a3b45;
+    color: white;
+    padding: 8px 15px;
+}
+
+QTabBar::tab:selected {
+    background-color: black;
+    color: #ffffff;
+    font-weight: bold;
+}
+
+QTabBar::tab:hover:!selected:!disabled {
+    background-color: #4a4b55;
+    color: #ffffff;
+}
+
+QTabBar::tab:disabled {
+    background-color: #1a1b20;
+    color: #555555;
 }
